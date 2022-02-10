@@ -1,6 +1,6 @@
 # Formularios reactivos
 
-Los Formularios Reactivos nos proveen de una forma de manejar las entradas de datos del usuario cuyos valores cambian en el tiempo.
+Los Formularios Reactivos nos proveen una forma de manejar las entradas de datos del usuario cuyos valores cambian en el tiempo.
 
 Cada cambio que ocurre en el formulario devuelve un nuevo estado, lo que ayuda a mantener la integridad del modelo entre cada cambio. Los formularios reactivos están basados en flujos de datos de tipo Observable, donde cada entrada y cada valor toman la forma de un flujo de datos que puede ser accedido de manera asíncrona.
 
@@ -56,7 +56,7 @@ El formulario se define como un grupo de controles. Cada control tendrá un nomb
 #### bhd-accounts-transaction.component.ts
 ```typescript
 private buildForm() {
-  this.accountsForm = this.fb.group({
+  this.accountsForm = this.formBuilder.group({
     amount: [],
     currency: [],
     description: [],
@@ -107,7 +107,7 @@ La validación es una pieza clave de la entrada de datos en cualquier aplicació
 #### bhd-accounts-transaction.component.ts
 ```typescript
 private buildForm() {
-  this.accountsForm = this.fb.group({
+  this.accountsForm = this.formBuilder.group({
     amount: ['', Validators.required],
     currency: ['', Validators.required],
     description: ['', [

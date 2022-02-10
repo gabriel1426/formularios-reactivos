@@ -205,7 +205,7 @@ Lo que no queremos es llevar de vuelta la lógica a la vista; así que lo recome
 ```typescript
 public getError(controlName: string): string {
   let error = '';
-  const control = this.formGroup.get(controlName);
+  const control = this.accountsForm.get(controlName);
   if (control.touched && control.errors != null) {
     error = JSON.stringify(control.errors);
   }
@@ -215,7 +215,7 @@ public getError(controlName: string): string {
 
 En la vista colocaremos adecuadamente los mensajes para facilitarle la corrección al usuario.
 
-#### bhd-accounts-transaction.component.ts
+#### bhd-accounts-transaction.component.html
 ```html
 <span>{{ getError('amount')}}</span>
 <span>{{ getError('description')}}</span>

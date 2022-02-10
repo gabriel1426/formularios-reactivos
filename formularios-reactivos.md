@@ -18,7 +18,7 @@ Para poder usarlo tenemos que importar el módulo de Angular en el que viene dec
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [RegisterComponent],
+  declarations: [BhdAccountsTransactionComponent],
   imports: [
     CommonModule,
     TransactionRoutingModule,

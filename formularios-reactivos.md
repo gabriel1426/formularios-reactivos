@@ -1,18 +1,18 @@
 # Formularios reactivos
 
-Los Formularios Reactivos nos proveen de una manera de manejar las entradas de datos del usuario cuyos valores cambian en el tiempo.
+Los Formularios Reactivos nos proveen de una forma de manejar las entradas de datos del usuario cuyos valores cambian en el tiempo.
 
 Cada cambio que ocurre en el formulario devuelve un nuevo estado, lo que ayuda a mantener la integridad del modelo entre cada cambio. Los formularios reactivos están basados en flujos de datos de tipo Observable, donde cada entrada y cada valor toman la forma de un flujo de datos que puede ser accedido de manera asíncrona.
 
-Los Formularios Reactivos son mas escalables, reusables y fáciles de probar. Cada Elemento de la vista está directamente enlazado al modelo mediante una instancia de FormControl. Las actualizaciones de la vista al modelo y del modelo a la vista son síncronas y no dependen de la representación en la Interfaz de Usuario del cliente.
+Los Formularios Reactivos son mas escalables, reusables y fáciles de probar. Cada Elemento de la vista está directamente enlazado al modelo mediante una instancia de FormControl. Las actualizaciones de la vista al modelo y del modelo a la vista son síncronas y no dependen de la representación en la Interfaz de usuario del cliente.
 
 ## Form Builder
 
-Entra en acción el FormBuilder, un servicio del que han de depender los componentes que quieran desacoplar el modelo de la vista. Se usa para construir un formulario creando un FormGroup, (un grupo de controles) que realiza un seguimiento del valor y estado de cambio y validez de los datos.
+El FormBuilder es un servicio del que han de depender los componentes que quieran desacoplar el modelo de la vista. Se usa para construir un formulario creando un FormGroup, (un grupo de controles) que realiza un seguimiento del valor y estado de cambio y validez de los datos.
 
 Para poder usarlo tenemos que importar el módulo de Angular en el que viene declarado, el ReactiveFormModule.
 
-#### security.model.ts
+#### transactions.module.ts
 ```typescript
 
 import { ReactiveFormsModule } from '@angular/forms';
@@ -21,20 +21,20 @@ import { ReactiveFormsModule } from '@angular/forms';
   declarations: [RegisterComponent],
   imports: [
     CommonModule,
-    SecurityRoutingModule,
+    TransactionRoutingModule,
     ReactiveFormsModule
   ]
 })
-export class SecurityModule { }
+export class TransactionsModule { }
 ```
 
 Veamos un ejemplo de su declaración.
 
-#### register.component.ts
+#### bhd-accounts-transaction.component.ts
 ```typescript
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-export class RegisterComponent implements OnInit {
+export class BhdAccountsTransactionComponent implements OnInit {
   public formGroup: FormGroup;
 
   constructor( private formBuilder: FormBuilder ) { }
@@ -42,6 +42,7 @@ export class RegisterComponent implements OnInit {
   public ngOnInit() {
     this.buildForm();
   }
+
   private buildForm(){
     this.formGroup = this.formBuilder.group({});
   }
@@ -52,20 +53,15 @@ export class RegisterComponent implements OnInit {
 
 El formulario se define como un grupo de controles. Cada control tendrá un nombre y una configuración. Esa definición permite establecer un valor inicial al control.
 
-#### register.component.ts
+#### bhd-accounts-transaction.component.ts
 ```typescript
 private buildForm() {
-  const ege = 25;
-  const name = 'JOHN DOE';
-  const dni = 1090412356;
-  const email = 'john@angular.io';
-  this.formGroup = this.formBuilder.group({
-    ege: ege,
-    name: name.toLowerCase(),
-    dni: dni,
-    country: '',
-    email: email,
-    password: ''
+  this.accountsForm = this.fb.group({
+    amount: [],
+    currency: [],
+    description: [],
+    isToday: [true],
+    date: [PrivateUtilsService.getCurrentDate()]
   });
 }
 ```
@@ -80,93 +76,71 @@ Para ello usaremos dos directivas que vienen dentro del módulo reactivo son **[
 
 #### register.component.html
 ```html
-<form [formGroup]="formGroup">
-  <label for="ege">Ege</label>
-  <input name="ege"
-        formControlName="ege"
+<form [formGroup]="accountsForm">
+  <label for="amount">amount</label>
+  <input name="amount"
+        formControlName="amount"
         type="number" />
-  <label for="name">Name</label>
-  <input name="name"
-        formControlName="name"
+  <label for="currency">Currency</label>
+  <input name="currency"
+        formControlName="currency"
         type="text" />
-  <label for="dni">Dni</label>
-  <input name="dni"
-        formControlName="dni"
-        type="number" />
-  <label for="country">Country</label>
-  <input name="country"
-        formControlName="country"
+  <label for="description">Description</label>
+  <input name="description"
+        formControlName="description"
         type="text" />
-  <label for="email">E-mail</label>
-  <input name="email"
-        formControlName="email"
-        type="email" />
-  <label for="password">Password</label>
-  <input name="password"
-        formControlName="password"
-        type="password" />
+  <label for="isToday">IsToday</label>
+  <input name="isToday"
+        formControlName="isToday"
+        type="radio" />
+  <label for="date">Date</label>
+  <input name="date"
+        formControlName="date"
+        type="date" />
 </form>
 ```
 
-## Validación y estados
-
-La validación es una pieza clave de la entrada de datos en cualquier aplicación. Es el primer frente de defensa ante errores de usuarios; ya sean involuntarios o deliberados.
-
-Dichas validaciones se solían realizar agregando atributos html tales como el conocido required. Pero todo eso ahora se traslada a la configuración de cada control, donde podrás establecer una o varias reglas de validación sin usar html.
-
 ## Validadores predefinidos y personalizados
 
-Como veremos, tenemos la posibilidad de escribir nuestras propias validaciones para resolver diferentes casos y de igual forma se pueden usar las validaciones que vienen predefinidas como funciones en el objeto Validators de framework.
+La validación es una pieza clave de la entrada de datos en cualquier aplicación. Como veremos, tenemos la posibilidad de escribir nuestras propias validaciones para resolver diferentes casos y de igual forma se pueden usar las validaciones que vienen predefinidas como funciones en el objeto Validators de framework.
 
-#### register.component.ts
+#### bhd-accounts-transaction.component.ts
 ```typescript
 private buildForm() {
-  const ege = 25;
-  const name = 'JOHN DOE';
-  const dni = 1090412356;
-  const email = 'john@angular.io';
-  const minPassLength = 4;
-
-  this.formGroup = this.formBuilder.group({
-    ege: ege,
-    name: [name.toLowerCase(), Validators.required],
-    dni: [dni, Validators.required],
-    country: '',
-    email: ['john@angular.io', [
+  this.accountsForm = this.fb.group({
+    amount: ['', Validators.required],
+    currency: ['', Validators.required],
+    description: ['', [
       Validators.required, 
-      Validators.email
+      Validators.minLength(8)
     ]],
-    password: ['', [
-      Validators.required, 
-      Validators.minLength(minPassLength)
-    ]]
+    isToday: [true],
+    date: [PrivateUtilsService.getCurrentDate(), Validators.required]
   });
 }
 ```
 
 A estas validaciones integradas se puede añadir otras creadas por el programador. Incluso con ejecución asíncrona para validaciones realizadas en el servidor.
 
-Por ejemplo podemos agregar una validación específica a las contraseñas
+Por ejemplo podemos agregar una validación específica a la descripción
 
 ```typescript
-password: ['', [
+description: ['', [
   Validators.required,
-  Validators.minLength(minPassLength),
-  this.validatePassword
+  Validators.minLength(8),
+  this.validateDescription
 ]]
 ```
-Lo único que se necesita es una función que recibe como argumento el control a validar. El resultado debe ser un null si todo va bien. Y cualquier otra cosa en caso de fallo.
+Lo único que se necesita es una función que reciba como argumento el control a validar. El resultado debe ser un null si todo va bien. Y cualquier otra cosa en caso de fallo.
 
-#### register.component.ts
+#### bhd-accounts-transaction.component.ts
 ```typescript
-private validatePassword(control: AbstractControl) {
-  const password = control.value;
+private validateDescription(control: AbstractControl) {
+  const pattern = new RegExp('^[A-Z]+$', 'i');
+  const description = control.value;
   let error = null;
-  if (!password.includes('$')) {
-    error = { ...error, dollar: 'needs a dollar symbol' };
-  }
-  if (!parseFloat(password[0])) {
-    error = { ...error, number: 'must start with a number' };
+  if (!pattern.test(description)) {
+    error = { ...error, pattern: 'Must be just letters' };
   }
   return error;
 }
@@ -204,7 +178,7 @@ La máquina de estados de cambio contempla entre otros los siguientes:
 
 **TOUCHED**: el usuario ha tocado el control lanzando un evento blur al salir.
 
-**UNTOUCHED**: el usuario no ha tocado y salido del control lanzando ningún evento blur.
+**UNTOUCHED**: el usuario no ha tocado el control.
 
 Como en el caso de los estados de validación, el formulario también se somete a estos estados en función de cómo estén sus controles.
 
@@ -212,22 +186,22 @@ Veamos primero en el caso general del formulario. Uno de los usos más inmediato
 
 #### register.component.html
 ```html
-<button (click)="register()"
-    [disabled]="formGroup.invalid">Register me!</button>
+<button (click)="sendForm()"
+    [disabled]="accountsForm.invalid">Send money!</button>
 ```
 
-#### register.component.ts
+#### bhd-accounts-transaction.component.ts
 ```typescript
-public register() {
-  const user = this.formGroup.value;
-  console.log(user);
+public sendForm() {
+  const transaction = this.accountsForm.value;
+  console.log(transaction);
 }
 ```
 La validación particular para cada control permite informar al usuario del fallo concreto. Es una buena práctica de usabilidad el esperar a que edite un control antes de mostrarle el fallo. Y también es muy habitual usar la misma estrategia para cada control.
 
 Lo que no queremos es llevar de vuelta la lógica a la vista; así que lo recomendado es crear una función auxiliar para mostrar los errores de validación.
 
-#### register.component.ts
+#### bhd-accounts-transaction.component.ts
 ```typescript
 public getError(controlName: string): string {
   let error = '';
@@ -241,12 +215,23 @@ public getError(controlName: string): string {
 
 En la vista colocaremos adecuadamente los mensajes para facilitarle la corrección al usuario.
 
-#### register.component.html
+#### bhd-accounts-transaction.component.ts
 ```html
-<span>{{ getError('name')}}</span>
-<span>{{ getError('email')}}</span>
-<span>{{ getError('password')}}</span>
+<span>{{ getError('amount')}}</span>
+<span>{{ getError('description')}}</span>
 ```
 
+De igual forma es posible que al enviar el formulario se requieran hacer validacion extras.
+
+#### bhd-accounts-transaction.component.ts
+```typescript
+public sendForm() {
+  const { amount } = this.accountsForm.value;
+  if (!(MathService.bhdParseFloat(amount) > 0)) {
+    this.errorHandlerService.showToast('pleaseSelectAmount', ErrorTypes.ERROR);
+    return;
+  }
+}
+```
 ## Resumen
 En resumen, los formularios reactivos tienen una API más robusta para agregar reactividad con RxJS, darle mejor mantenimiento a los formularios, separar la lógica en JavaScript del template o estructura en HTML, una forma más sencilla de agregar pruebas unitarias… En consecuencia, tus formularios con Angular tendrán una gran interfaz de usuario y UX.

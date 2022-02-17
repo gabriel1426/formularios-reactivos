@@ -35,7 +35,7 @@ Veamos un ejemplo de su declaración.
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 export class BhdAccountsTransactionComponent implements OnInit {
-  public formGroup: FormGroup;
+  public accountsForm: FormGroup;
 
   constructor( private formBuilder: FormBuilder ) { }
 
@@ -44,7 +44,7 @@ export class BhdAccountsTransactionComponent implements OnInit {
   }
 
   private buildForm(){
-    this.formGroup = this.formBuilder.group({});
+    this.accountsForm = this.formBuilder.group({});
   }
 }
 ```
@@ -74,7 +74,7 @@ Mientras tanto en la vista html… Este trabajo previo y extra que tienes que ha
 
 Para ello usaremos dos directivas que vienen dentro del módulo reactivo son **[formGroup]="objetoFormulario"** para el formulario en su conjunto, y **formControlName="nombreDelControl"** para cada control.
 
-#### register.component.html
+#### bhd-accounts-transaction.component.html
 ```html
 <form [formGroup]="accountsForm">
   <label for="amount">amount</label>
@@ -184,7 +184,7 @@ Como en el caso de los estados de validación, el formulario también se somete 
 
 Veamos primero en el caso general del formulario. Uno de los usos más inmediatos es deshabilitar el botón de envío cuando la validación de algún control falla.
 
-#### register.component.html
+#### bhd-accounts-transaction.component.html
 ```html
 <button (click)="sendForm()"
     [disabled]="accountsForm.invalid">Send money!</button>

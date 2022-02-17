@@ -234,4 +234,4 @@ public sendForm() {
 }
 ```
 ## Resumen
-En resumen, los formularios reactivos tienen una API más robusta para agregar reactividad con RxJS, darle mejor mantenimiento a los formularios, separar la lógica en JavaScript del template o estructura en HTML, una forma más sencilla de agregar pruebas unitarias… En consecuencia, tus formularios con Angular tendrán una gran interfaz de usuario y UX.
+En resumen, los formularios reactivos tienen una API más robusta para agregar reactividad con RxJS, darle mejor mantenimiento a los formularios, separar la lógica en JavaScript del template o estructura en HTML, una forma más sencilla de agregar pruebas unitarias.
